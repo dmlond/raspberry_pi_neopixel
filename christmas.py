@@ -4,6 +4,7 @@ import board
 import neopixel
 import signal
 import sys
+from collections import deque
 
 # Choose an open pin connected to the Data In of the NeoPixel strip, i.e. board.D18
 # NeoPixels must be connected to D10, D12, D18 or D21 to work.
@@ -17,27 +18,40 @@ num_pixels = 100
 ORDER = neopixel.GRB
 
 pixels = neopixel.NeoPixel(
-    pixel_pin, num_pixels, brightness=0.2, pixel_order=ORDER
+    pixel_pin, num_pixels, auto_write=False, brightness=0.2, pixel_order=ORDER
 )
+
+def green(pixel):
+    pixels[pixel] = (255,0,0)
+
+def red(pixel):
+    pixels[pixel] = (0,255,0)
+
+def yellow(pixel):
+    pixels[pixel] = (255,255,0)
+
+color_mod = deque([
+    green,
+    red,
+    yellow
+])
 
 def signal_handler(sig, frame):
     pixels.fill((0,0,0))
+    pixels.show()
     sys.exit(0)
 
-while True:
-    signal.signal(signal.SIGINT, signal_handler)
-
+def walk(wait):
     curr_pixel = 0
     while curr_pixel < num_pixels:
         mod = curr_pixel % 3
-        if mod == 0:
-            # green
-            pixels[curr_pixel] = (255,0,0)
-        elif mod == 1:
-            # red
-            pixels[curr_pixel] = (0,255,0)
-        else:
-            # yellow
-            pixels[curr_pixel] = (255,255,0)
+        color_mod[mod](curr_pixel)
         curr_pixel += 1
-    signal.pause()
+    pixels.show()
+    color_mod.rotate()
+    time.sleep(wait)
+
+signal.signal(signal.SIGINT, signal_handler)
+
+while True:
+    walk(0.5)
