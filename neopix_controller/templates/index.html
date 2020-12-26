@@ -1,0 +1,27 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}NeoPixel Control{% endblock %}
+{% block scripts %}
+  <script src="{{url_for('.static', filename='js/callbacks.js')}}"></script>
+  <script type="text/javascript">
+    window.onload = function(){
+      call('state');
+    };
+  </script>
+  {{super()}}
+{% endblock %}
+
+{% block content %}
+  <h4>Control Your NeoPixels</h4>
+  <h5>Current State: <span id='state'></span></h5>
+  <div>
+    <button type="button" class="btn btn-primary btn-block" onclick="call('static')">Static Christmas</button>
+  </div>
+  <br>
+  <div>
+    <button type="button" class="btn btn-success btn-block" onclick="call('blink')">Blinking Christmas</button>
+  </div>
+  <br>
+  <div>
+    <button type="button" class="btn btn-danger btn-block" onclick="call('down')">Turn Off</button>
+  </div>
+{% endblock %}
