@@ -5,11 +5,36 @@ This project contains a python application,
 library, and flask web application to control
 a NeoPixel string of lights.
 
-### Installation
+### Hardware
+
+- [NeoPixel Lights](https://www.amazon.com/gp/product/B06XD72LYM). There are many other
+types of NeoPixel lights on the market
+- [5v/10A AC-DC Power Supply for NeoPixel](https://www.amazon.com/gp/product/B01M0KLECZ). 
+Other NeoPixel lights may come with a power supply
+- Raspberry Pi Zero W with headers
+- breadboard
+- 2 breadboard to Pi Header Jumper Wires
+- 1 74AHCT125 level converter chip: safely transmits Pi GPIO wire signal to 5v/10A power
+without feeding back to the Pi
+- 8 breadboard to breadboard jumper wires, or solid core 24 awg wires
+
+I used the following color scheme:
+- red/orange wire: 5v power
+- black wire: ground
+- yellow wire: data
+- blue wire: GPIO
+
+### Wiring the Pi with the Lights
+
+The [AdaFruit Python NeoPixel Tutorial](https://learn.adafruit.com/neopixels-on-raspberry-pi) is an excellent resource, with diagrams, for
+wiring your Pi with your NeoPixel using the breadboard, wires, NeoPixel and
+power supply.
+
+### Configure the Pi Software
 
 1. Install [Raspberry Pi OS](https://www.raspberrypi.org/software/operating-systems/) on an sd card.
 
-I used the Raspberry Pi OS Lite image on a 32 GB sd card
+I used the Raspberry Pi OS Lite image on a 32 GB SD card
 
 2. Set up WIFI and ssh
 
@@ -37,7 +62,7 @@ instead (this is especially useful if you have more than 1 raspberry pi
 on your network).
 
 Once you can ssh to the running pi, you can create /home/pi/.ssh, with 700
-permission, and use secure copy to copy a public ssh key to 
+permission, and use secure copy or ssh-copy-id to copy a public ssh key to 
 /home/pi/.ssh/authorized_keys to enable secure passwordless login to your pi
 using ssh key authentication.
 
@@ -57,6 +82,7 @@ sudo chown -R 1000:1000 /var/run/media/$(id -nu)/rootfs/home/pi/.ssh
 3. Install software
 
 - requirements.txt
+- launch_christmas.sh
 - christmas.py
 - simpletest.py
 - lib
@@ -70,6 +96,7 @@ directory, and ensure they are owned by 1000:1000
 sudo cp requirements.txt /var/run/media/$(id -nu)/rootfs/home/pi/
 sudo chown 1000:1000 /var/run/media/$(id -nu)/rootfs/home/pi/requirements.txt
 sudo cp christmas.py /var/run/media/$(id -nu)/rootfs/home/pi/
+sudo cp launch_christmas.sh /var/run/media/$(id -nu)/rootfs/home/pi/
 sudo cp simpletest.py /var/run/media/$(id -nu)/rootfs/home/pi/
 sudo chown 1000:1000 /var/run/media/$(id -nu)/rootfs/home/pi/*py
 sudo cp -R lib /var/run/media/$(id -nu)/rootfs/home/pi/
@@ -78,7 +105,13 @@ sudo cp -R neopix_controller /var/run/media/$(id -nu)/rootfs/home/pi/
 sudo chown -R 1000:1000 /var/run/media/$(id -nu)/rootfs/home/pi/neopix_controller
 ```
 
+For users of fedora (possibly other Linux variants) there is a script,
+configure_pi.fedora.sh, that will do all of the above.
+
 4. Install requirements
+
+This must be done on the running raspbery pi, either using the graphical interface and
+a terminal, or using ssh
 
 a. update and upgrade apt-get, then install pip3
 ```
@@ -155,15 +188,12 @@ export FLASK_APP=/home/pi/neopix_controller
 flask run -h 0.0.0.0 > flask.log 2>&1 &
 ```
 
-then navigate to either raspberrypi.local:5000, or its IP address.
+launch_christmas.sh is a script that runs all of the above, and requires sudo
+
+Navigate to either raspberrypi.local:5000, or its IP address.
 You can also GET raspberrypi.local:5000/api/v1/state, static, blink, down
 to test the API methods.
 
 ***NOTE*** This application is not meant for production use, and is not very secure. It
 meant for instructional use only, using a secure home network.
 
-### Links
-
-The [NeoPixel Lights](https://www.amazon.com/gp/product/B06XD72LYM) I used
-[AdaFruit NeoPixel Offerings](https://www.adafruit.com/category/168)
-[AdaFruit Python NeoPixel Tutorial](https://learn.adafruit.com/neopixels-on-raspberry-pi/python-usage)
