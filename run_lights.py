@@ -30,11 +30,7 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 signal.signal(signal.SIGHUP, signal_handler)
 
-try:
-    last_state = Path(state_file).read_text().rstrip()
-except FileNotFoundError:
-    last_state = None
-
+last_state = None
 while True:
     try:
         current_state = Path(state_file).read_text().rstrip()
