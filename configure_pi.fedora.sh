@@ -5,6 +5,7 @@ then
   echo "requires root/sudo" >&2
   exit 1
 fi
+PUBLIC_KEY=$1
 
 mnt_dir="/var/run/media/${SUDO_USER}"
 boot_dir="${mnt_dir}/boot"
