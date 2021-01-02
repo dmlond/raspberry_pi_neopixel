@@ -41,14 +41,17 @@ then
   echo "Installing Software" >&2
   cp requirements.txt ${root_dir}/home/pi/
   chown 1000:1000 ${root_dir}/home/pi/requirements.txt
-  cp christmas.py ${root_dir}/home/pi/
-  cp launch_christmas.sh ${root_dir}/home/pi/
+  cp run_lights.py ${root_dir}/home/pi/
   cp simpletest.py ${root_dir}/home/pi/
   chown 1000:1000 ${root_dir}/home/pi/*py
+  cp launch*sh lights_down.sh ${root_dir}/home/pi/
+  chown 1000:1000 ${root_dir}/home/pi/*sh
   cp -R lib ${root_dir}/home/pi/
   chown -R 1000:1000 ${root_dir}/home/pi/lib
   cp -R neopix_controller ${root_dir}/home/pi/
   chown -R 1000:1000 ${root_dir}/home/pi/neopix_controller
+  cp *json ${root_dir}/home/pi/
+  chown 1000:1000 ${root_dir}/home/pi/*json
 else
   echo "Use ssh over wifi to install requirements and ssh public key" >&2d
 fi
