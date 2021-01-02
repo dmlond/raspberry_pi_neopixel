@@ -5,23 +5,25 @@ from pathlib import Path
 import json
 from lib.neopixc import NeoPixC
 
-try:
-  color_file = sys.argv[1]
-except IndexError:
-  print(f"usage: {sys.argv[0]} color_json_file")
-  exit(1)
+def get_colors():
+    color_file = '/home/pi/colors'
+    try:
+        colorsF = open(color_file, 'r')
+    except FileNotFoundError:
+        raise Exception(f"{color_file} not found")
 
-try:
-  colorsF = open(color_file, 'r')
-except FileNotFoundError:
-    print(f"{color_file} not found")
-    exit(1)
+    colors = json.load(colorsF)
+    colorsF.close()
+    return colors
 
-colors = json.load(colorsF)
-colorsF.close()
-
-state_file = '/home/pi/state'
-pixels = NeoPixC(colors)
+def get_state():
+    state_file = '/home/pi/state'
+    try:
+        current_state = Path(state_file).read_text().rstrip()
+    except FileNotFoundError:
+        # default
+        current_state = 'static'
+    return current_state
 
 def signal_handler(sig, frame):
     pixels.down()
@@ -30,14 +32,16 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 signal.signal(signal.SIGHUP, signal_handler)
 
+pixels = NeoPixC()
 last_state = None
+last_colors = None
 while True:
-    try:
-        current_state = Path(state_file).read_text().rstrip()
-    except FileNotFoundError:
-        # default
-        current_state = 'static'
+    current_colors = get_colors()
+    if current_colors != last_colors:
+        pixels.set_colors(current_colors)
+        last_colors = current_colors
 
+    current_state = get_state()
     if current_state != last_state:
         if current_state == 'blink':
             pixels.walk()
@@ -46,4 +50,4 @@ while True:
             pixels.walk()
         elif current_state == 'down':
             pixels.down()
-        time.sleep(0.5)
+    time.sleep(0.5)
