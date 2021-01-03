@@ -73,10 +73,10 @@ before you boot the pi. Make sure the files are all owned by user 1000, group 10
 (pi user and group on the Raspbery Pi OS) after you copy them.
 
 ```bash
-sudo mkdir /var/run/media/$(id -nu)/rootfs/home/pi/.ssh
-sudo chmod 700 /var/run/media/$(id -nu)/rootfs/home/pi/.ssh
-sudo cp ~/.ssh/$yourkey.pub /var/run/media/$(id -nu)/rootfs/home/pi/.ssh/authorized_keys
-sudo chown -R 1000:1000 /var/run/media/$(id -nu)/rootfs/home/pi/.ssh
+sudo mkdir /var/run/media/${SUDO_USER}/rootfs/home/pi/.ssh
+sudo chmod 700 /var/run/media/${SUDO_USER}/rootfs/home/pi/.ssh
+sudo cp ~/.ssh/$yourkey.pub /var/run/media/${SUDO_USER}/rootfs/home/pi/.ssh/authorized_keys
+sudo chown -R 1000:1000 /var/run/media/${SUDO_USER}/rootfs/home/pi/.ssh
 ```
 
 3. Install software
