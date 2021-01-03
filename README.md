@@ -5,6 +5,8 @@ This project contains a python application,
 library, and flask web application to control
 a NeoPixel string of lights.
 
+[[_TOC_]]
+
 ### Hardware
 
 - [NeoPixel Lights](https://www.amazon.com/gp/product/B06XD72LYM). There are many other
